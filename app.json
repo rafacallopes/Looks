@@ -1,0 +1,17 @@
+{
+   "expo": {
+    "name": "insta-brand",
+    "version": "1.0.1",
+    "slug": "insta-brand",
+    "sdkVersion": "26.0.0",
+    "packagerOpts": {
+      "nonPersistent": "--nonPersistent"
+    },
+    "ios": {
+      "bundleIdentifier": "com.s2k.instabrand"
+    },
+    "android": {
+      "package": "com.s2k.instabrand"
+    },
+   }
+ }

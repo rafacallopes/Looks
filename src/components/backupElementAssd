@@ -1,0 +1,148 @@
+import React, { Component } from 'react'
+import { View, Text, Dimensions, TouchableWithoutFeedback, Image } from 'react-native'
+import { Button, Icon, Body } from 'native-base'
+import { Camera, Permissions } from 'expo'
+import { connect } from 'react-redux'
+import * as actions from '../actions/actions'
+import { Actions } from 'react-native-router-flux'
+import Modal from "react-native-modal";
+
+const { width, height } = Dimensions.get('window')
+
+class ElementAdd extends Component {
+
+  state = {
+    modalVisible: false, 
+    
+  };
+
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
+  }
+
+  onAddPressed = (context) => {
+    this.props.setContext(context)
+    if(context === "PRODUCT") {
+      Actions.productForm()
+    } else {
+      Actions.recordMenu()
+    }
+  }
+
+  onCameraPress = () => {
+  if(this.props.hasPermission === null){
+    this.setModalVisible(true)
+    } else {
+    Actions.recordMenu()
+    }
+  }
+
+  render = () => {
+    return(
+      <View style={{width, height: (height * 0.8), backgroundColor: '#F8F8F8', alignItems: 'center', justifyContent: 'center'}}>
+
+      <Modal
+                animationType="slide"
+                transparent={true}
+                visible={this.state.modalVisible}
+                onRequestClose={() => {
+                alert('Modal has been closed.');
+                 }}>
+               <View style ={{ alignSelf: 'center', width: width * 0.8, paddingBottom: width * 0.7, borderWidth: 1, borderColor: '#f4f5f7', backgroundColor: 'white'}}>
+                <Body >
+                 
+                    <View style={{alignSelf: 'center', paddingTop: 30}}>
+                    <Image
+                    style={{width: width * 0.65, height: 60}}
+                    source={{uri: 'https://scontent.fsdu5-1.fna.fbcdn.net/v/t1.0-9/39969070_1782688425133257_6006733469667819520_n.jpg?_nc_cat=0&oh=5d4ff6c143917b20b80108e1d7f2fe2d&oe=5BF268BE'}}
+                    />
+                        </View>
+                   <View style={{paddingTop: width * 0.15}}>
+                   <View style={{paddingTop: 0}}>
+                    <Text style={{fontSize: 12, fontWeight: 'bold', selfAlign: 'centet'}}>Would you like to acess your camera</Text>
+                    <Text style={{fontSize: 12, fontWeight: 'bold', selfAlign: 'centet'}}>in order to use the full function of the app?</Text>
+                    <Text style={{fontSize: 11, fontWeight: 'bold', color: '#a8a4a6', paddingTop: 8}}>This allows the app to use your device's camera.</Text>
+                    <Text style={{fontSize: 11, fontWeight: 'bold', color: '#a8a4a6', paddingTop: 0, paddingLeft: width * 0.1}}>Approval is only necessary once.</Text>
+
+                    </View>
+
+                    <View style={{paddingTop: 100, flexDirection: 'row', alignSelf: 'center'}}>
+                     <Button style = {{width: width * 0.25,  
+      borderWidth: 1, 
+      borderRadius: 18,
+      backgroundColor: '#602438',
+      borderColor: '#602438',
+      height: 35,
+      justifyContent: 'center',
+      alignItems: 'center'}} 
+                     onPress={() => {this.setModalVisible(!this.state.modalVisible) }
+
+                     }>
+                     <Text style={{fontSize: 11, fontWeight: 'bold', color: 'white',}}>DECLINE</Text>
+                     </Button>
+                     <View style={{paddingHorizontal: 15}}></View>
+                     <Button style = {{width: width * 0.25,  
+      borderWidth: 1, 
+      borderRadius: 18,
+      backgroundColor: '#602438',
+      borderColor: '#602438',
+      height: 35,
+      justifyContent: 'center',
+      alignItems: 'center'}} 
+                     onPress={() => {this.setModalVisible(!this.state.modalVisible) ;Actions.recordMenu()} }>
+                     <Text style={{fontSize: 11, fontWeight: 'bold', color: 'white',}}>ACCEPT</Text>
+                     </Button>
+                     </View>
+                    </View>
+             
+          </Body>
+          </View>
+        </Modal>
+
+
+
+
+        <TouchableWithoutFeedback onPress={() => this.onAddPressed('PRODUCT')}>
+          <View style={{ width: 220, height: 175, borderRadius: 20, backgroundColor: '#FFF', shadowColor: '#D8D8D8', shadowOffset: { width: 0, height: 0 }, shadowRadius: 20, shadowOpacity: 0.9, alignItems: 'center', marginVertical: 32, justifyContent: 'center' }}>
+            <Icon style={{ fontSize: 64, color: '#5B0E32' }} name='md-images' />
+            <Text style={{ fontWeight: 'bold', fontSize: 14, marginTop: 16 }}>Upload From gallery</Text>
+            <View style={{ width: 160, height: 6.5, backgroundColor: '#5B0E32', borderRadius: 50, position: 'absolute', bottom: 0}}></View>
+          </View>
+        </TouchableWithoutFeedback>
+
+        <TouchableWithoutFeedback onPress={() => this.onCameraPress()}> 
+          <View style={{ width: 220, height: 175, borderRadius: 20, backgroundColor: '#FFF', shadowColor: '#D8D8D8', shadowOffset: { width: 0, height: 0 }, shadowRadius: 20, shadowOpacity: 0.9, alignItems: 'center', marginVertical: 32, justifyContent: 'center' }}>
+            <Icon type='Octicons' style={{ fontSize: 60, color: '#5B0E32' }} name='device-camera' />
+            <Text style={{ fontWeight: 'bold', fontSize: 14, marginTop: 16 }}>Take Photo</Text>
+            <View style={{ width: 160, height: 6.5, backgroundColor: '#5B0E32', borderRadius: 50, position: 'absolute', bottom: 0}}></View>
+          </View>
+        </TouchableWithoutFeedback>
+
+      </View>
+    )
+  }
+}
+
+// const styles = {
+  
+//   button: {
+//       width: width * 0.25,  
+//       borderWidth: 1, 
+//       borderRadius: 18,
+//       backgroundColor: '#602438',
+//       borderColor: '#602438',
+//       height: 35,
+//       justifyContent: 'center',
+//       alignItems: 'center'
+      
+//   }
+// }
+
+mapStateToProps = state => {
+  return { type: state.camera.type, hasPermission: state.camera.hasPermission, processing: state.camera.processing, context: state.camera.context }
+}
+
+export default connect(mapStateToProps, actions)(ElementAdd)
+
+
+// this.onAddPressed('LOOK')
